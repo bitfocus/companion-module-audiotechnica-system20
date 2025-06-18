@@ -4,7 +4,7 @@ import type { System20Instance } from './main.js'
 export function UpdateFeedbacks(self: System20Instance): void {
 	const feedbacks: CompanionFeedbackDefinitions = {}
 
-	;(feedbacks.channelEQ = {
+	feedbacks.channelEQ = {
 		name: 'Channel EQ On/Off',
 		type: 'boolean',
 		description: 'Equalizer of a Channel is On or Off',
@@ -40,81 +40,83 @@ export function UpdateFeedbacks(self: System20Instance): void {
 			// Return true if channelData exists and matches the HPF state, otherwise false
 			return channelData ? channelData.eq === Number(eq) : false
 		},
-	}),
-		(feedbacks.channelHPF = {
-			name: 'Channel HPF On/Off',
-			type: 'boolean',
-			description: 'High Pass Filter of a Channel is On or Off',
-			defaultStyle: {
-				color: combineRgb(255, 0, 0),
-				bgcolor: combineRgb(0, 0, 0),
-			},
-			options: [
-				{
-					type: 'dropdown',
-					label: 'Channel Number',
-					id: 'channel',
-					default: self.CHOICES_CHANNELS[0].id,
-					choices: self.CHOICES_CHANNELS,
-				},
-				{
-					type: 'dropdown',
-					label: 'HPF',
-					id: 'hpf',
-					default: 1,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'On' },
-					],
-				},
-			],
-			callback: (feedback) => {
-				const { channel, hpf } = feedback.options
+	}
 
-				// Find in self.channels
-				const channelData = self.channels.find((c: any) => c.channel === channel)
-
-				// Return true if channelData exists and matches the HPF state, otherwise false
-				return channelData ? channelData.hpf === Number(hpf) : false
+	feedbacks.channelHPF = {
+		name: 'Channel HPF On/Off',
+		type: 'boolean',
+		description: 'High Pass Filter of a Channel is On or Off',
+		defaultStyle: {
+			color: combineRgb(255, 0, 0),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		options: [
+			{
+				type: 'dropdown',
+				label: 'Channel Number',
+				id: 'channel',
+				default: self.CHOICES_CHANNELS[0].id,
+				choices: self.CHOICES_CHANNELS,
 			},
-		}),
-		(feedbacks.channelMute = {
-			name: 'Channel Mute On/Off',
-			type: 'boolean',
-			description: 'Mute of a Channel is On or Off',
-			defaultStyle: {
-				color: combineRgb(255, 0, 0),
-				bgcolor: combineRgb(0, 0, 0),
+			{
+				type: 'dropdown',
+				label: 'HPF',
+				id: 'hpf',
+				default: 1,
+				choices: [
+					{ id: 0, label: 'Off' },
+					{ id: 1, label: 'On' },
+				],
 			},
-			options: [
-				{
-					type: 'dropdown',
-					label: 'Channel Number',
-					id: 'channel',
-					default: self.CHOICES_CHANNELS[0].id,
-					choices: self.CHOICES_CHANNELS,
-				},
-				{
-					type: 'dropdown',
-					label: 'Mute',
-					id: 'mute',
-					default: 1,
-					choices: [
-						{ id: 0, label: 'Off' },
-						{ id: 1, label: 'On' },
-					],
-				},
-			],
-			callback: (feedback) => {
-				const { channel, mute } = feedback.options
+		],
+		callback: (feedback) => {
+			const { channel, hpf } = feedback.options
 
-				// Find in self.channels
-				const channelData = self.channels.find((c: any) => c.channel === channel)
+			// Find in self.channels
+			const channelData = self.channels.find((c: any) => c.channel === channel)
 
-				// Return true if channelData exists and matches the HPF state, otherwise false
-				return channelData ? channelData.mute === Number(mute) : false
+			// Return true if channelData exists and matches the HPF state, otherwise false
+			return channelData ? channelData.hpf === Number(hpf) : false
+		},
+	}
+
+	feedbacks.channelMute = {
+		name: 'Channel Mute On/Off',
+		type: 'boolean',
+		description: 'Mute of a Channel is On or Off',
+		defaultStyle: {
+			color: combineRgb(255, 0, 0),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		options: [
+			{
+				type: 'dropdown',
+				label: 'Channel Number',
+				id: 'channel',
+				default: self.CHOICES_CHANNELS[0].id,
+				choices: self.CHOICES_CHANNELS,
 			},
-		})
+			{
+				type: 'dropdown',
+				label: 'Mute',
+				id: 'mute',
+				default: 1,
+				choices: [
+					{ id: 0, label: 'Off' },
+					{ id: 1, label: 'On' },
+				],
+			},
+		],
+		callback: (feedback) => {
+			const { channel, mute } = feedback.options
+
+			// Find in self.channels
+			const channelData = self.channels.find((c: any) => c.channel === channel)
+
+			// Return true if channelData exists and matches the HPF state, otherwise false
+			return channelData ? channelData.mute === Number(mute) : false
+		},
+	}
 
 	feedbacks.channelTxMute = {
 		name: 'Channel TX Mute On/Off',
