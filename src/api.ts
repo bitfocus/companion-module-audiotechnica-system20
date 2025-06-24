@@ -348,7 +348,13 @@ function ProcessData(self: System20Instance, response: string) {
 		case 'gtxmicgain':
 			channelObj.channel = arrValues[0]
 			channelObj.txmicgain = arrValues[1]
-			variableObj['channel' + arrValues[0] + '_txmicgain'] = channelObj.txmicgain
+			// Convert txmicgain to a human-readable format by looking up the value in CHOICES_TX_GAIN
+			let gainObj = self.CHOICES_TX_GAIN.find((gain) => gain.id === arrValues[1])
+			if (gainObj) {
+				variableObj['channel' + arrValues[0] + '_txmicgain'] = gainObj.label
+			} else {
+				variableObj['channel' + arrValues[0] + '_txmicgain']
+			}
 			break
 		case 'gtxinput':
 			channelObj.channel = arrValues[0]
