@@ -160,8 +160,8 @@ export function UpdateActions(self: System20Instance): void {
 				},
 			],
 			callback: (action) => {
-				const { channel } = action.options
-				const channelObj = self.channels.find((c: any) => c.channel === channel)
+				const channel = String(action.options.channel)
+				const channelObj = self.channels[channel]
 				if (!channelObj) {
 					self.log('error', `Channel ${channel} not found`)
 					return
@@ -213,9 +213,8 @@ export function UpdateActions(self: System20Instance): void {
 				},
 			],
 			callback: (action) => {
-				const { channel } = action.options
-
-				const channelObj = self.channels.find((c: any) => c.channel === channel)
+				const channel = String(action.options.channel)
+				const channelObj = self.channels[channel]
 				if (!channelObj) {
 					self.log('error', `Channel ${channel} not found`)
 					return
@@ -248,9 +247,8 @@ export function UpdateActions(self: System20Instance): void {
 				},
 			],
 			callback: (action) => {
-				const { channel } = action.options
-
-				const channelObj = self.channels.find((c: any) => c.channel === channel)
+				const channel = String(action.options.channel)
+				const channelObj = self.channels[channel]
 				if (!channelObj) {
 					self.log('error', `Channel ${channel} not found`)
 					return
@@ -342,8 +340,8 @@ export function UpdateActions(self: System20Instance): void {
 				},
 			],
 			callback: (action) => {
-				const { channel } = action.options
-				const channelObj = self.channels.find((c: any) => c.channel === channel)
+				const channel = String(action.options.channel)
+				const channelObj = self.channels[channel]
 				if (!channelObj) {
 					self.log('error', `Channel ${channel} not found`)
 					return
