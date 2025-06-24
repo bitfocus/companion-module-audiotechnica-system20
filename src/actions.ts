@@ -147,6 +147,33 @@ export function UpdateActions(self: System20Instance): void {
 			},
 		},
 
+		toggleChannelMute: {
+			name: 'Toggle Channel Mute',
+			description: 'Toggle Mute or Unmute a Channel',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Channel Number',
+					id: 'channel',
+					default: self.CHOICES_CHANNELS[0].id,
+					choices: self.CHOICES_CHANNELS,
+				},
+			],
+			callback: (action) => {
+				const { channel } = action.options
+				const channelObj = self.channels.find((c: any) => c.channel === channel)
+				if (!channelObj) {
+					self.log('error', `Channel ${channel} not found`)
+					return
+				}
+				const currentMute = channelObj.mute ?? 0
+				//flip the value and send the new
+				const newMute = currentMute === 0 ? 1 : 0
+				const params = `${channel},${newMute}`
+				self.queueCommand('schmute', 'S', (rx ?? '').toString(), params)
+			},
+		},
+
 		setTxMicGain: {
 			name: 'Set TX Mic Gain',
 			description: 'Set Mic Gain of a TX',
@@ -169,6 +196,76 @@ export function UpdateActions(self: System20Instance): void {
 			callback: (action) => {
 				const { channel, gain } = action.options
 				const params = `${channel},${gain}`
+				self.queueCommand('stxmicgain', 'S', (rx ?? '').toString(), params)
+			},
+		},
+
+		incTxMicGain: {
+			name: 'Increase TX Mic Gain',
+			description: 'Increase Mic Gain of a TX',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Channel Number',
+					id: 'channel',
+					default: self.CHOICES_CHANNELS[0].id,
+					choices: self.CHOICES_CHANNELS,
+				},
+			],
+			callback: (action) => {
+				const { channel } = action.options
+
+				const channelObj = self.channels.find((c: any) => c.channel === channel)
+				if (!channelObj) {
+					self.log('error', `Channel ${channel} not found`)
+					return
+				}
+
+				const currentGain = channelObj.txMicGain ?? '0'
+				//get the next gain value from CHOICES_TX_GAIN, by comparing the current gain (as string) to the id of the choices
+				const currentGainIndex = self.CHOICES_TX_GAIN.findIndex((g) => g.id === currentGain.toString())
+				if (currentGainIndex === -1) {
+					self.log('error', `Current gain ${currentGain} not found in CHOICES_TX_GAIN`)
+					return
+				}
+				const nextGainIndex = (currentGainIndex + 1) % self.CHOICES_TX_GAIN.length
+				const newgain = self.CHOICES_TX_GAIN[nextGainIndex].id
+				const params = `${channel},${newgain}`
+				self.queueCommand('stxmicgain', 'S', (rx ?? '').toString(), params)
+			},
+		},
+
+		decTxMicGain: {
+			name: 'Decrease TX Mic Gain',
+			description: 'Decrease Mic Gain of a TX',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Channel Number',
+					id: 'channel',
+					default: self.CHOICES_CHANNELS[0].id,
+					choices: self.CHOICES_CHANNELS,
+				},
+			],
+			callback: (action) => {
+				const { channel } = action.options
+
+				const channelObj = self.channels.find((c: any) => c.channel === channel)
+				if (!channelObj) {
+					self.log('error', `Channel ${channel} not found`)
+					return
+				}
+
+				const currentGain = channelObj.txMicGain ?? '0'
+				//get the next gain value from CHOICES_TX_GAIN, by comparing the current gain (as string) to the id of the choices
+				const currentGainIndex = self.CHOICES_TX_GAIN.findIndex((g) => g.id === currentGain.toString())
+				if (currentGainIndex === -1) {
+					self.log('error', `Current gain ${currentGain} not found in CHOICES_TX_GAIN`)
+					return
+				}
+				const nextGainIndex = (currentGainIndex - 1 + self.CHOICES_TX_GAIN.length) % self.CHOICES_TX_GAIN.length
+				const newgain = self.CHOICES_TX_GAIN[nextGainIndex].id
+				const params = `${channel},${newgain}`
 				self.queueCommand('stxmicgain', 'S', (rx ?? '').toString(), params)
 			},
 		},
@@ -228,6 +325,33 @@ export function UpdateActions(self: System20Instance): void {
 			callback: (action) => {
 				const { channel, mute } = action.options
 				const params = `${channel},${mute}`
+				self.queueCommand('stxforcedmute', 'S', (rx ?? '').toString(), params)
+			},
+		},
+
+		toggleTxExternalMute: {
+			name: 'Toggle TX External Mute',
+			description: 'Toggle Mute or Unmute a TX',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Channel Number',
+					id: 'channel',
+					default: self.CHOICES_CHANNELS[0].id,
+					choices: self.CHOICES_CHANNELS,
+				},
+			],
+			callback: (action) => {
+				const { channel } = action.options
+				const channelObj = self.channels.find((c: any) => c.channel === channel)
+				if (!channelObj) {
+					self.log('error', `Channel ${channel} not found`)
+					return
+				}
+				const currentMute = channelObj.txExternalMute ?? 0
+				//flip the value and send the new
+				const newMute = currentMute === 0 ? 1 : 0
+				const params = `${channel},${newMute}`
 				self.queueCommand('stxforcedmute', 'S', (rx ?? '').toString(), params)
 			},
 		},
