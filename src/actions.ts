@@ -162,11 +162,10 @@ export function UpdateActions(self: System20Instance): void {
 			callback: (action) => {
 				const channel = String(action.options.channel)
 				const channelObj = self.channels[channel]
-				if (!channelObj) {
-					self.log('error', `Channel ${channel} not found`)
-					return
+				let currentMute = 0
+				if (channelObj) {
+					currentMute = channelObj.mute ?? 0
 				}
-				const currentMute = channelObj.mute ?? 0
 				//flip the value and send the new
 				const newMute = currentMute === 0 ? 1 : 0
 				const params = `${channel},${newMute}`
@@ -215,12 +214,11 @@ export function UpdateActions(self: System20Instance): void {
 			callback: (action) => {
 				const channel = String(action.options.channel)
 				const channelObj = self.channels[channel]
-				if (!channelObj) {
-					self.log('error', `Channel ${channel} not found`)
-					return
+				let currentGain = '0'
+				
+				if (channelObj) {
+					currentGain = channelObj.txMicGain ?? '0'
 				}
-
-				const currentGain = channelObj.txMicGain ?? '0'
 				//get the next gain value from CHOICES_TX_GAIN, by comparing the current gain (as string) to the id of the choices
 				const currentGainIndex = self.CHOICES_TX_GAIN.findIndex((g) => g.id === currentGain.toString())
 				if (currentGainIndex === -1) {
@@ -249,12 +247,13 @@ export function UpdateActions(self: System20Instance): void {
 			callback: (action) => {
 				const channel = String(action.options.channel)
 				const channelObj = self.channels[channel]
-				if (!channelObj) {
-					self.log('error', `Channel ${channel} not found`)
-					return
+
+				let currentGain = '0'
+				
+				if (channelObj) {
+					currentGain = channelObj.txMicGain ?? '0'
 				}
 
-				const currentGain = channelObj.txMicGain ?? '0'
 				//get the next gain value from CHOICES_TX_GAIN, by comparing the current gain (as string) to the id of the choices
 				const currentGainIndex = self.CHOICES_TX_GAIN.findIndex((g) => g.id === currentGain.toString())
 				if (currentGainIndex === -1) {
@@ -342,11 +341,12 @@ export function UpdateActions(self: System20Instance): void {
 			callback: (action) => {
 				const channel = String(action.options.channel)
 				const channelObj = self.channels[channel]
-				if (!channelObj) {
-					self.log('error', `Channel ${channel} not found`)
-					return
+
+				let currentMute = 0
+				if (channelObj) {
+					currentMute = channelObj.txExternalMute ?? 0
 				}
-				const currentMute = channelObj.txExternalMute ?? 0
+
 				//flip the value and send the new
 				const newMute = currentMute === 0 ? 1 : 0
 				const params = `${channel},${newMute}`
