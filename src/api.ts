@@ -122,10 +122,6 @@ function BuildCommand(cmd: string, handshake: string, rxLinkId: string, params: 
 }
 
 function ProcessError(self: System20Instance, response: string): void {
-	if (self.config.verbose) {
-		self.log('debug', `Got Error Response: ${response}`)
-	}
-
 	let errorReturn = response.split(' ')
 
 	//console.log('response: ' + response)
@@ -136,9 +132,13 @@ function ProcessError(self: System20Instance, response: string): void {
 
 	let errorType = ''
 
-	if (errorCode == 2) {
+	if (errorCode == 2 || errorCode == 61 || errorCode == 62) {
 		//ignore it for now
+		return
 	} else {
+		if (self.config.verbose) {
+			self.log('debug', `Got Error Response: ${response}`)
+		}
 		switch (errorCode) {
 			case 1: // Grammar/Syntax error
 				errorType = 'Grammar/Syntax error'
@@ -156,6 +156,8 @@ function ProcessError(self: System20Instance, response: string): void {
 			case 11: // ignore
 				return
 			case 61: //ignore
+				return
+			case 62: //ignore
 				return
 			case 90: // Busy
 				errorType = 'System is Busy'
