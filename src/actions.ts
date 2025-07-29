@@ -297,7 +297,7 @@ export function UpdateActions(self: System20Instance): void {
 		},
 
 		setTxExternalMute: {
-			name: 'Set TX External Mute',
+			name: 'Set TX External (Forced) Mute',
 			description: 'Mute or Unmute a TX',
 			options: [
 				{
@@ -342,13 +342,13 @@ export function UpdateActions(self: System20Instance): void {
 				const channel = String(action.options.channel)
 				const channelObj = self.channels[channel]
 
-				let currentMute = 0
+				let currentMute = 1
 				if (channelObj) {
-					currentMute = channelObj.txExternalMute ?? 0
+					currentMute = channelObj.txforcedmute ?? 1
 				}
 
 				//flip the value and send the new
-				const newMute = currentMute === 0 ? 1 : 0
+				const newMute = currentMute === 1 ? 2 : 1
 				const params = `${channel},${newMute}`
 				self.queueCommand('stxforcedmute', 'S', (rx ?? '').toString(), params)
 			},
