@@ -95,8 +95,11 @@ export function UpdateVariableDefinitions(self: System20Instance): void {
 	//lock status
 	variables.push({ variableId: 'lock', name: 'Lock Status' })
 
+	//af meter
+	variables.push({ variableId: 'afmeter', name: 'AF Meter' })
+
 	//RF/AF meters (1-4)
-	variables.push({ variableId: 'channel1_rfmeter', name: 'Channel 1 RF Meter' })
+	/*variables.push({ variableId: 'channel1_rfmeter', name: 'Channel 1 RF Meter' })
 	variables.push({ variableId: 'channel2_rfmeter', name: 'Channel 2 RF Meter' })
 	variables.push({ variableId: 'channel3_rfmeter', name: 'Channel 3 RF Meter' })
 	variables.push({ variableId: 'channel4_rfmeter', name: 'Channel 4 RF Meter' })
@@ -104,7 +107,7 @@ export function UpdateVariableDefinitions(self: System20Instance): void {
 	variables.push({ variableId: 'channel1_afmeter', name: 'Channel 1 AF Meter' })
 	variables.push({ variableId: 'channel2_afmeter', name: 'Channel 2 AF Meter' })
 	variables.push({ variableId: 'channel3_afmeter', name: 'Channel 3 AF Meter' })
-	variables.push({ variableId: 'channel4_afmeter', name: 'Channel 4 AF Meter' })
+	variables.push({ variableId: 'channel4_afmeter', name: 'Channel 4 AF Meter' })*/
 
 	self.setVariableDefinitions(variables)
 }

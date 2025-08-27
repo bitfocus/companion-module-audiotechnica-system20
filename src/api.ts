@@ -14,7 +14,7 @@ export async function InitConnection(self: System20Instance): Promise<void> {
 			self.updateStatus(InstanceStatus.ConnectionFailure)
 			clearInterval(self.pollInterval)
 			self.socket?.destroy()
-			self.socket == null
+			self.socket = null
 		})
 
 		self.socket.on('connect', () => {
@@ -24,7 +24,7 @@ export async function InitConnection(self: System20Instance): Promise<void> {
 		})
 
 		self.socket.on('data', (receivebuffer) => {
-			pipeline += receivebuffer.toString('utf8')
+			pipeline += receivebuffer.toString('latin1')
 
 			if (self.config.verbose) {
 				self.log('debug', `Received: ${pipeline}`)
@@ -79,8 +79,8 @@ function RequestData(self: System20Instance): void {
 		self.queueCommand('gchoutputtype', 'O', rxLinkId, channel.toString()) // Get channel output type
 		self.queueCommand('gchvolume', 'O', rxLinkId, channel.toString()) // Get channel volume
 		self.queueCommand('gchhpf', 'O', rxLinkId, channel.toString()) // Get channel high pass filter
-		self.queueCommand('gchmixoutvolume', 'O', rxLinkId, channel.toString()) // Get channel mix out volume
-		self.queueCommand('gstsmute', 'O', rxLinkId, channel.toString()) // Get channel mute status
+		self.queueCommand('gmixoutvolume', 'O', rxLinkId, channel.toString()) // Get channel mix out volume
+		self.queueCommand('gchmute', 'O', rxLinkId, channel.toString()) // Get channel mute status
 		self.queueCommand('gststx', 'O', rxLinkId, channel.toString()) // Get TX status for the channel
 		self.queueCommand('gtxmodel', 'O', rxLinkId, channel.toString()) // Get TX model
 		self.queueCommand('gtxdeviceid', 'O', rxLinkId, channel.toString()) // Get TX device ID
@@ -251,10 +251,6 @@ function SendCommand(self: System20Instance, cmd: string, handshake: string, rxL
 }
 
 function ProcessData(self: System20Instance, response: string) {
-	if (self.config.verbose) {
-		self.log('debug', `Got Response: ${response}`)
-	}
-
 	let category = 'XXX'
 	let args: string[] = []
 	let params = ''
@@ -278,13 +274,13 @@ function ProcessData(self: System20Instance, response: string) {
 	switch (category) {
 		//common data
 		case 'gmyname':
-			variableObj.name = arrValues[0]
+			variableObj.name = arrValues[0].replace(/"/g, '') //remove quotes if they exist
 			break
 		case 'gmydeviceid':
-			variableObj.deviceid = arrValues[0]
+			variableObj.deviceid = arrValues[0].replace(/"/g, '') //remove quotes if they exist
 			break
 		case 'gmyid':
-			variableObj.myid = arrValues[0]
+			variableObj.myid = arrValues[0].replace(/"/g, '') //remove quotes if they exist
 			break
 		case 'gautolock':
 			variableObj.autolock = parseInt(arrValues[0]) ? 'On' : 'Off'
@@ -322,19 +318,19 @@ function ProcessData(self: System20Instance, response: string) {
 			channelObj.hpf = parseInt(arrValues[1])
 			variableObj['channel' + arrValues[0] + '_hpf'] = channelObj.hpf ? 'On' : 'Off'
 			break
-		case 'gchmixoutvolume':
+		case 'gmixoutvolume':
 			channelObj.channel = arrValues[0]
 			channelObj.mixoutvolume = arrValues[1]
 			variableObj['channel' + arrValues[0] + '_mixoutvolume'] = channelObj.mixoutvolume
 			break
-		case 'gstsmute':
+		case 'gchmute':
 			channelObj.channel = arrValues[0]
 			channelObj.mute = parseInt(arrValues[1])
 			variableObj['channel' + arrValues[0] + '_mute'] = channelObj.mute ? 'On' : 'Off'
 			break
 		case 'gststx':
 			channelObj.channel = arrValues[0]
-			channelObj.tx = arrValues[1]
+			channelObj.tx = parseInt(arrValues[1])
 			variableObj['channel' + arrValues[0] + '_tx'] = channelObj.tx ? 'On' : 'Off'
 			break
 		case 'gtxmodel':
@@ -344,7 +340,7 @@ function ProcessData(self: System20Instance, response: string) {
 			break
 		case 'gtxdeviceid':
 			channelObj.channel = arrValues[0]
-			channelObj.txdeviceid = arrValues[1]
+			channelObj.txdeviceid = arrValues[1].replace(/"/g, '') //remove quotes if they exist
 			variableObj['channel' + arrValues[0] + '_txdeviceid'] = channelObj.txdeviceid
 			break
 		case 'gtxmicgain':
@@ -372,11 +368,6 @@ function ProcessData(self: System20Instance, response: string) {
 			channelObj.channel = arrValues[0]
 			channelObj.txled = arrValues[1]
 			variableObj['channel' + arrValues[0] + '_txled'] = channelObj.txled
-			break
-		case 'gtxbattery':
-			channelObj.channel = arrValues[0]
-			channelObj.txbattery = arrValues[1]
-			variableObj['channel' + arrValues[0] + '_txbattery'] = channelObj.txbattery
 			break
 		case 'gtxid':
 			channelObj.channel = arrValues[0]
