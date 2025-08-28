@@ -77,6 +77,12 @@ export function UpdateVariableDefinitions(self: System20Instance): void {
 	variables.push({ variableId: 'channel3_txmute', name: 'Channel 3 TX Mute' })
 	variables.push({ variableId: 'channel4_txmute', name: 'Channel 4 TX Mute' })
 
+	//channel tx mute mode (1-4)
+	variables.push({ variableId: 'channel1_txmutemode', name: 'Channel 1 TX Mute Mode' })
+	variables.push({ variableId: 'channel2_txmutemode', name: 'Channel 2 TX Mute Mode' })
+	variables.push({ variableId: 'channel3_txmutemode', name: 'Channel 3 TX Mute Mode' })
+	variables.push({ variableId: 'channel4_txmutemode', name: 'Channel 4 TX Mute Mode' })
+
 	//channel tx battery level (1-4)
 	variables.push({ variableId: 'channel1_txbatterylevel', name: 'Channel 1 TX Battery Level' })
 	variables.push({ variableId: 'channel2_txbatterylevel', name: 'Channel 2 TX Battery Level' })

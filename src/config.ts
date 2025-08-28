@@ -53,7 +53,7 @@ export function GetConfigFields(self: System20Instance): SomeCompanionConfigFiel
 			type: 'number',
 			id: 'poll_interval',
 			label: 'Polling Interval (ms)',
-			default: 1000,
+			default: 500,
 			min: 100,
 			max: 60000,
 			required: true,

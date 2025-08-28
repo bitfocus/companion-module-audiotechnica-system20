@@ -151,7 +151,7 @@ export function UpdateFeedbacks(self: System20Instance): void {
 			// Find in self.channels
 			const channelData = self.channels.find((c: any) => c.channel === channel)
 
-			// Return true if channelData exists and matches the HPF state, otherwise false
+			// Return true if channelData exists and matches the state, otherwise false
 			return channelData ? channelData.txmute === Number(txmute) : false
 		},
 	}
